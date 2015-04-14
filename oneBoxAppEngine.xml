@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<onebox 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+	id="AppEngingeSearchText" 
+	includeAllFields="true" 
+	suppressDateTime="false" 
+	suppressIPAddr="false" 
+	suppressKeyword="false" 
+	type="external">
+<name>AppEngingeSearchText</name>
+<security userAuth="none"/>
+<trigger triggerType="null"/>
+<providerURL>http://oneboxsearch.appspot.com/documentcontroller</providerURL>
+<resultsTemplate>
+     <xsl:template name="appEngineOneBoxResults">
+	    <table border="0" cellpadding="1" cellspacing="0">
+	          <tbody>
+	            <tr>
+	              <td width="40" valign="top">
+	                <a>
+	                  <xsl:attribute name="href"><xsl:value-of select="title/urlLink"/></xsl:attribute>
+	                  	                <img width="40" height="40">
+	                  <xsl:attribute name="src"><xsl:value-of select="IMAGE_SOURCE"/></xsl:attribute>
+	                </img>
+	                </a>
+	              </td>
+	                <xsl:for-each select="MODULE_RESULT">
+	                    <td width="80" valign="top">
+	                      <a>
+	                          <xsl:attribute name="href"><xsl:value-of select="U"/></xsl:attribute>
+	                          <b><xsl:value-of select="Title"/></b>
+	                      </a><br/>
+	                        Tags: <xsl:value-of select="Field[@name='tags']"/>
+	                    </td>
+	                </xsl:for-each>
+	            </tr>
+	          </tbody>
+	        </table>
+     </xsl:template>
+</resultsTemplate>
+
+</onebox>
