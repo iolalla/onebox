@@ -28,9 +28,14 @@
 	                    <td width="80" valign="top">
 	                      <a>
 	                          <xsl:attribute name="href"><xsl:value-of select="U"/></xsl:attribute>
-	                          <b><xsl:value-of select="Title"/></b>
-	                      </a><br/>
+							  <xsl:attribute name="alternate"><xsl:value-of select="title"/></xsl:attribute>
+							  <xsl:attribute name="target">_blank</xsl:attribute>
+	                          <xsl:value-of select="Field[@name='image']"/>
+	                      </a>
+						  <!-- 
+						  <br/>
 	                        Tags: <xsl:value-of select="Field[@name='tags']"/>
+						  -->
 	                    </td>
 	                </xsl:for-each>
 	            </tr>

@@ -1,3 +1,4 @@
+
 package com.google.work.search;
 
 import java.io.IOException;
@@ -37,8 +38,9 @@ public class DocumentController extends HttpServlet {
 		String url = req.getParameter("url");
 		String title = req.getParameter("title");
 		String content = req.getParameter("content");
+		String image = req.getParameter("image");
 		String tags = req.getParameter("tags");
-		Document doc = this.insertDocument(url, title, content, tags);
+		Document doc = this.insertDocument(url, title, content, image, tags);
 		Logger.getGlobal().fine("Doc Id " + doc.getId());
 		//Log.debug("Doc Id " + doc.getId());
 		resp.setContentType("text/xml");
@@ -63,7 +65,7 @@ public class DocumentController extends HttpServlet {
 		return xmlResults;
 	}
 	
-	public Document insertDocument(String url, String title,String content, String tags) {
+	public Document insertDocument(String url, String title,String content, String image, String tags) {
 		//
 	    IndexSpec indexSpec = IndexSpec.newBuilder().setName(indexName).build(); 
 	    com.google.appengine.api.search.Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
@@ -72,6 +74,7 @@ public class DocumentController extends HttpServlet {
 	    			.addField(Field.newBuilder().setName("url").setText(url))
 	    			.addField(Field.newBuilder().setName("title").setText(title))
 	    			.addField(Field.newBuilder().setName("content").setText(content))
+					.addField(Field.newBuilder().setName("image").setText(content))
 	    			.addField(Field.newBuilder().setName("tags").setText(tags)).build();
 	    
 	    try {
@@ -134,14 +137,21 @@ public class DocumentController extends HttpServlet {
 				.append("</urlText>");
 			buf.append("<urlLink>").append("https://www.google.com/work/search").append("</urlLink>");
 			buf.append("</title>");
-			buf.append("<IMAGE_SOURCE>").append("http://vectorlogo.biz/wp-content/uploads/2013/01/GOOGLE-VECTORLOGO-BIZ-128x128.png").append("</IMAGE_SOURCE>");
+			//Linkedin Logo: https://media.licdn.com/media/p/6/005/056/054/057ffb7.png
+			//Google Logo: https://media.licdn.com/media/p/3/000/062/2ff/080cae8.png
+			buf.append("<IMAGE_SOURCE>").append("https://media.licdn.com/media/p/3/000/062/2ff/080cae8.png").append("</IMAGE_SOURCE>");
 			for (ScoredDocument document : results) {
 			buf.append("<MODULE_RESULT>");
 				buf.append("<U>").append(document.getOnlyField("url").getText()).append("</U>");
 				buf.append("<Title>").append(document.getOnlyField("title").getText()).append("</Title>");
 				buf.append("<Field");
+					buf.append(" name=\"image\"");
+					buf.append(">");
+				buf.append(document.getOnlyField("image").getText());
+				buf.append("</Field>");
+				buf.append("<Field");
 					buf.append(" name=\"tags\"");
-				buf.append(">");
+					buf.append(">");
 				buf.append(document.getOnlyField("tags").getText());
 				buf.append("</Field>");
 			buf.append("</MODULE_RESULT>");
