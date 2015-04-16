@@ -28,4 +28,5 @@ To test it locally I recommend to view only the xml, or if you have a Developmen
 
 #TODO:
 -Develop security:LDAP, SSO, Cookie, basic Auth
+
 -Test integration with Predict API, HBase, BigQuery
