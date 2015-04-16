@@ -28,7 +28,7 @@ public class DocumentController extends HttpServlet {
 			throws IOException {
 		String query = req.getParameter("query");
 		resp.setContentType("text/xml");
-		resp.getWriter().println(search(query));
+		resp.getWriter().println(this.search(query));
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -44,10 +44,10 @@ public class DocumentController extends HttpServlet {
 		Logger.getGlobal().fine("Doc Id " + doc.getId());
 		//Log.debug("Doc Id " + doc.getId());
 		resp.setContentType("text/xml");
-	    resp.getWriter().println(search(url));
+	    resp.getWriter().println(this.search(url));
 	}
 	
-	public String search(String query) {
+	private String search(String query) {
 		IndexSpec indexSpec = IndexSpec.newBuilder().setName(indexName).build(); 
 	    Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
 	    String xmlResults = "";
@@ -65,7 +65,7 @@ public class DocumentController extends HttpServlet {
 		return xmlResults;
 	}
 	
-	public Document insertDocument(String url, String title,String content, String image, String tags) {
+	private Document insertDocument(String url, String title,String content, String image, String tags) {
 		//
 	    IndexSpec indexSpec = IndexSpec.newBuilder().setName(indexName).build(); 
 	    com.google.appengine.api.search.Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
@@ -74,7 +74,7 @@ public class DocumentController extends HttpServlet {
 	    			.addField(Field.newBuilder().setName("url").setText(url))
 	    			.addField(Field.newBuilder().setName("title").setText(title))
 	    			.addField(Field.newBuilder().setName("content").setText(content))
-					.addField(Field.newBuilder().setName("image").setText(content))
+					.addField(Field.newBuilder().setName("image").setText(image))
 	    			.addField(Field.newBuilder().setName("tags").setText(tags)).build();
 	    
 	    try {
@@ -122,19 +122,15 @@ public class DocumentController extends HttpServlet {
 	 * @param results
 	 * @return
 	 */
-	public String buildResponse( Results<ScoredDocument> results ) {
+	private String buildResponse( Results<ScoredDocument> results ) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		buf.append("<OneBoxResults xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"")
 			.append(" xsi:noNamespaceSchemaLocation=\"oneboxresults.xsd\">");
 		buf.append("<resultCode>").append("success").append("</resultCode>");
-			buf.append("<provider>")
-				.append("One Box module indexing from the GSA")
-				.append("</provider>");
+			buf.append("<provider>").append("One Box module indexing from the GSA").append("</provider>");
 			buf.append("<title>");
-			buf.append("<urlText>")
-				.append("The URL of the One Box module indexing from the GSA")
-				.append("</urlText>");
+			buf.append("<urlText>").append("The URL of the One Box module indexing from the GSA").append("</urlText>");
 			buf.append("<urlLink>").append("https://www.google.com/work/search").append("</urlLink>");
 			buf.append("</title>");
 			//Linkedin Logo: https://media.licdn.com/media/p/6/005/056/054/057ffb7.png
@@ -144,16 +140,8 @@ public class DocumentController extends HttpServlet {
 			buf.append("<MODULE_RESULT>");
 				buf.append("<U>").append(document.getOnlyField("url").getText()).append("</U>");
 				buf.append("<Title>").append(document.getOnlyField("title").getText()).append("</Title>");
-				buf.append("<Field");
-					buf.append(" name=\"image\"");
-					buf.append(">");
-				buf.append(document.getOnlyField("image").getText());
-				buf.append("</Field>");
-				buf.append("<Field");
-					buf.append(" name=\"tags\"");
-					buf.append(">");
-				buf.append(document.getOnlyField("tags").getText());
-				buf.append("</Field>");
+				buf.append("<Field").append(" name=\"image\"").append(">").append(document.getOnlyField("image").getText()).append("</Field>");
+				buf.append("<Field").append(" name=\"tags\"").append(">").append(document.getOnlyField("tags").getText()).append("</Field>");
 			buf.append("</MODULE_RESULT>");
 			}
 		buf.append("</OneBoxResults>");

@@ -14,6 +14,16 @@
 		<servlet-name>documentcontroller</servlet-name>
 		<url-pattern>/documentcontroller</url-pattern>
 	</servlet-mapping>
+	
+		<servlet>
+		<servlet-name>removedocument</servlet-name>
+		<servlet-class>com.google.work.search.RemoveDocument</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>removedocument</servlet-name>
+		<url-pattern>/removedocument</url-pattern>
+	</servlet-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
